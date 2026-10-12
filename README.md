@@ -1,139 +1,300 @@
-# SENTINEL X 🛡️
-### Hybrid AI Cyber-Defense Simulation
 
-Sentinel X is an open-source educational cybersecurity simulation. It generates synthetic network-flow-like telemetry, applies an Isolation Forest anomaly detector, ranks simulated alerts with transparent rules, and suggests defensive next steps for human review.
+# Sentinel-X 🛡️
+### AI-Powered Cyber-Defense Simulation & Anomaly Detection
 
-> **Safety and scope:** The initial release operates only on synthetic data. It does not monitor live networks, block hosts, modify firewalls, or autonomously contain threats. Scores and demo metrics are not evidence of real-world attack prediction.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://sentinel-x-raghuraj.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Features
+**Sentinel-X** is an interactive cybersecurity dashboard that demonstrates anomaly detection, explainable risk scoring, and defensive response recommendations using simulated network and security telemetry.
 
-- Cyberpunk-style Streamlit command console.
-- Synthetic baseline traffic and selectable simulated scenarios: port scanning, credential brute force, data exfiltration, and lateral movement.
-- Isolation Forest anomaly detection trained on synthetic baseline traffic.
-- Transparent 0–100 heuristic risk score with reasons.
-- Defensive response recommendations with human approval explicitly required.
-- Session audit log with CSV export.
-- Optional local LLM explanations through Ollama; detection works without an LLM.
-- Small synthetic-label evaluation report to support honest experimentation.
+Explore the live dashboard:
 
-## Architecture
+**[🚀 Launch Sentinel-X](https://sentinel-x-raghuraj.streamlit.app/)**
+
+> **Important:** Sentinel-X currently uses synthetic demonstration data. It is an educational simulation, not a production intrusion detection system, and it does not establish validated real-world attack prediction performance.
+
+---
+
+## 📌 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Dashboard Preview](#-dashboard-preview)
+- [Architecture](#-architecture)
+- [Technology Stack](#-technology-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Running the Dashboard](#-running-the-dashboard)
+- [Running Tests](#-running-tests)
+- [How Risk Scoring Works](#-how-risk-scoring-works)
+- [Optional Local AI Explanations](#-optional-local-ai-explanations)
+- [Security and Limitations](#-security-and-limitations)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🔍 Overview
+
+Security teams need ways to explore suspicious activity, prioritize alerts, and understand possible defensive actions.
+
+Sentinel-X provides a visual demonstration of this workflow. It generates simulated security events, applies anomaly detection, assigns heuristic risk scores, and presents alerts and response recommendations in a Streamlit dashboard.
+
+The project is designed to demonstrate Python development, applied machine learning, data visualization, and responsible cybersecurity prototyping.
+
+## ✨ Features
+
+- **Interactive security dashboard:** View simulated telemetry, anomaly counts, risk levels, and monitored hosts.
+- **Synthetic event generation:** Explore generated security events without connecting to a real network.
+- **Anomaly detection:** Use an Isolation Forest model trained on synthetic baseline data to identify unusual observations.
+- **Explainable risk scoring:** Combine heuristic signals to prioritize events for investigation.
+- **Alert prioritization:** Review high-risk events and example attack patterns, including simulated lateral movement.
+- **Defensive recommendations:** Display suggested investigation and response actions for human review.
+- **Optional local LLM explanations:** Integrate with a locally running Ollama model when configured and available.
+- **Evaluation utilities:** Explore demonstration-scoped evaluation results and model behavior.
+- **Automated tests:** Run unit tests for event generation, scoring, response recommendations, and demo evaluation.
+- **Cloud deployment:** Access the dashboard through Streamlit Community Cloud.
+
+## 🖥️ Dashboard Preview
+
+**Live application:** [sentinel-x-raghuraj.streamlit.app](https://sentinel-x-raghuraj.streamlit.app/)
+
+To add a screenshot:
+
+1. Create a folder named `docs/screenshots`.
+2. Capture a screenshot of the running dashboard.
+3. Save it as `sentinel-x-dashboard.png` inside that folder.
+4. Commit the image to GitHub.
+
+After adding the image, uncomment the following line:
+
+<!-- ![Sentinel-X Dashboard](docs/screenshots/sentinel-x-dashboard.png) -->
+
+The screenshot is optional; the live demo link works independently.
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart TD
+    A["Synthetic Security Telemetry"] --> B["Event Generation"]
+    B --> C["Anomaly Detection"]
+    C --> D["Heuristic Risk Scoring"]
+    D --> E["Prioritized Alerts"]
+    E --> F["Defensive Recommendations"]
+    E --> G["Optional Ollama Explanation"]
+    F --> H["Streamlit Dashboard"]
+    G --> H
+    H --> I["Human Review"]
+```
+
+### Workflow
+
+1. Generate simulated security events.
+2. Process the generated observations through the anomaly detection and scoring logic.
+3. Rank suspicious events by their calculated risk.
+4. Display metrics, charts, and prioritized alerts.
+5. Present defensive recommendations for human review.
+6. Optionally request a natural-language explanation from a local Ollama model.
+
+## 🧰 Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Application logic |
+| Streamlit | Interactive web dashboard |
+| NumPy | Numerical operations |
+| Pandas | Event and tabular data processing |
+| scikit-learn | Isolation Forest anomaly detection |
+| Altair | Data visualizations |
+| Requests | Optional HTTP communication with a local model |
+| Ollama | Optional local LLM explanations |
+| pytest | Automated testing |
+| Git and GitHub | Version control and source hosting |
+| Streamlit Community Cloud | Public application deployment |
+
+## 📁 Project Structure
 
 ```text
-Streamlit UI
-    |
-Synthetic telemetry generator
-    |
-Feature pipeline (duration, bytes, packets, failed logins, ports, rate)
-    |
-Isolation Forest + transparent risk rules
-    |
-Alert priority queue
-    |
-Defensive recommendation agent ---- Optional Ollama explanation
-    |
-Session audit log + CSV export
+Sentinel-X/
+├── app.py                 # Streamlit dashboard and interface
+├── sentinel/
+│   ├── __init__.py        # Python package initialization
+│   └── engine.py          # Simulation, detection, scoring, recommendations
+├── tests/
+│   └── test_engine.py     # Automated engine tests
+├── requirements.txt       # Python dependencies
+├── .env.example           # Example environment configuration
+├── .gitignore             # Files excluded from Git
+├── LICENSE                # MIT license
+└── README.md              # Project documentation
 ```
 
-## Requirements
+## 🚀 Getting Started
 
-- Windows 10/11
-- Python 3.11 or 3.12 recommended
-- Internet access for initial Python package installation
-- Optional: Ollama installed locally and a model downloaded for LLM explanations
+### Prerequisites
 
-Python 3.14 may not have compatible wheels for every dependency in every environment. If installation fails, use Python 3.12.
+Install the following:
 
-## Run on Windows (PowerShell)
+- Python 3.12 or another Python version compatible with the project dependencies
+- Git
+- A terminal such as PowerShell
+- An internet connection for installing dependencies
 
-1. Extract the ZIP and open PowerShell in the `sentinel-x` folder.
-2. Create a virtual environment:
-
-   ```powershell
-   py -3.12 -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   ```
-
-   If PowerShell blocks activation for this session, use:
-
-   ```powershell
-   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-   .\.venv\Scripts\Activate.ps1
-   ```
-
-3. Install dependencies:
-
-   ```powershell
-   python -m pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
-
-4. Launch:
-
-   ```powershell
-   streamlit run app.py
-   ```
-
-5. Streamlit will print a local URL, normally `http://localhost:8501`. Open it in your browser.
-
-## Optional local LLM (Ollama)
-
-Core functionality does not require an LLM. To enable alert explanations:
-
-1. Install Ollama from https://ollama.com/
-2. In PowerShell, download a model you can run on your machine:
-
-   ```powershell
-   ollama pull qwen3:4b
-   ```
-
-3. Ensure Ollama is running, then use the sidebar endpoint `http://localhost:11434` and model name `qwen3:4b`.
-4. Select an alert and expand **Ask optional local LLM to explain this alert**.
-
-The LLM receives simulated alert details. Do not send confidential telemetry or credentials to an external model. This starter uses local Ollama only and does not require an API key.
-
-## How to use
-
-1. Choose a scenario from the sidebar.
-2. Click **Generate New Telemetry**.
-3. Inspect the risk trend and alert priority queue.
-4. Select an alert and review the suggested response.
-5. Click **Add recommendation to audit log** to record the recommendation in the current app session.
-6. Download the audit log CSV if needed.
-7. Expand **Model notes and evaluation** to see synthetic-label metrics.
-
-## Model and limitations
-
-- Isolation Forest is fitted to synthetic baseline traffic. It identifies statistical outliers; it does not inherently know whether an event is malicious.
-- Risk score combines detector output and hand-written scenario/feature rules. A high score is a triage signal, not proof of an attack.
-- Scenario names are generated by the simulator. Metrics compare model/rule outputs with these synthetic labels only and must not be represented as benchmark results on real enterprise data.
-- This project does not yet ingest PCAP, NetFlow, IPFIX, endpoint logs, or SIEM events.
-- This project does not claim validated forecasting lead time.
-- Response actions are recommendations only and never execute against real systems.
-- The audit log is held in Streamlit session state and is not a durable multi-user database.
-
-## Roadmap
-
-- [ ] Add reproducible experiments with fixed train/test splits.
-- [ ] Add precision/recall curves and confusion matrix visualization.
-- [ ] Add opt-in, privacy-preserving CSV import with strict schema validation.
-- [ ] Add persistent SQLite audit history and event provenance.
-- [ ] Add network graph visualization and scenario replay.
-- [ ] Add a pluggable LLM provider interface.
-- [ ] Add automated tests and CI.
-- [ ] Only consider live telemetry after a security and privacy review.
-
-## Security and responsible use
-
-This is a defensive learning tool. Use it only with synthetic data or telemetry you are authorized to analyze. Do not use this project to attack, scan, or disrupt systems. Do not treat its output as an automated incident response decision.
-
-## Development
+### 1. Clone the repository
 
 ```powershell
-python -m pytest
+git clone https://github.com/raghuraj72/Sentinel-X.git
+cd Sentinel-X
 ```
 
-The starter tests use synthetic data only.
+### 2. Create a virtual environment
 
-## License
+On Windows PowerShell:
 
-MIT. See [LICENSE](LICENSE).
+```powershell
+py -3.12 -m venv .venv
+```
+
+Activate it:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+If Python 3.12 is not installed, use another compatible installed version, such as `py -3.14`, if the dependencies support it.
+
+### 3. Install dependencies
+
+```powershell
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Start the application
+
+```powershell
+streamlit run app.py
+```
+
+Streamlit will print a local address, typically:
+
+`http://localhost:8501`
+
+Open that address in your browser.
+
+## ▶️ Running Tests
+
+With the virtual environment activated, run:
+
+```powershell
+python -m pytest -v
+```
+
+The test suite covers:
+
+- Expected fields in generated events
+- Risk scoring and anomaly detector output
+- Review-only defensive recommendations
+- Evaluation scoped to demonstration data
+
+The initial project test run passed all four tests. Run the tests again after making changes to confirm the current code still passes.
+
+## 🧠 How Risk Scoring Works
+
+Sentinel-X demonstrates a two-part approach:
+
+### Anomaly detection
+
+An Isolation Forest model is trained on a synthetic baseline and used to flag observations that differ from that baseline.
+
+### Heuristic risk scoring
+
+Additional rule-based signals are used to assign a risk score and prioritize events for review.
+
+The dashboard uses those results to highlight suspicious activity and display possible defensive actions.
+
+**A high risk score is a prioritization signal, not proof of an attack.** Detection results depend on the simulated data, model configuration, and scoring rules.
+
+### Evaluation
+
+Evaluation utilities are intended to demonstrate the workflow using the project's synthetic scenarios. They do not establish performance on independently collected network traffic or guarantee a prediction lead time.
+
+## 🤖 Optional Local AI Explanations
+
+Sentinel-X can optionally use an Ollama model running on your own computer to generate natural-language explanations of selected alerts.
+
+For example, a local model may help describe why repeated authentication failures deserve investigation and suggest defensive checks.
+
+To use this feature:
+
+1. Install Ollama from [ollama.com](https://ollama.com/).
+2. Download a compatible model supported by your local setup.
+3. Start Ollama and verify that the model responds to a test prompt.
+4. Configure the application according to the options implemented in `sentinel/engine.py`.
+5. Test the dashboard with Ollama both available and unavailable.
+
+Local model availability is optional. The dashboard should be tested independently of the LLM integration.
+
+**Cloud note:** The Ollama service on your personal computer is not automatically available to a Streamlit Community Cloud deployment. A cloud deployment needs an appropriately reachable model endpoint or must operate without this optional feature.
+
+Never expose an unauthenticated model endpoint publicly or commit API keys, passwords, or private credentials to GitHub.
+
+## 🔐 Security and Limitations
+
+Sentinel-X is an educational prototype. Understand the following limitations before using it for security decisions.
+
+- **Synthetic telemetry:** Generated events are not live network traffic.
+- **No validated real-world performance:** Demonstration scores and metrics must not be presented as independently validated detection accuracy.
+- **No production protection:** The application is not a replacement for an enterprise SIEM, EDR, IDS, firewall, or incident-response process.
+- **No automatic enforcement:** Recommendations are intended for human review; the project does not perform real network blocking or remediation.
+- **Model limitations:** Synthetic training data may not represent the diversity of real benign and malicious activity.
+- **LLM limitations:** Generated explanations can be inaccurate and should be independently checked.
+- **Cloud environment:** Local files, services, and models are not automatically available to the deployed application.
+
+Use the project only in environments you own or are authorized to test. Do not interpret simulated alerts as evidence of actual compromise.
+
+## 🗺️ Roadmap
+
+Potential future improvements include:
+
+- [ ] Add documented sample datasets with clear provenance.
+- [ ] Evaluate on suitable, independently sourced security datasets.
+- [ ] Report precision, recall, F1-score, and false-positive rates where appropriate.
+- [ ] Add configurable thresholds and clearer explanations for individual risk signals.
+- [ ] Improve logging, error handling, and reproducibility.
+- [ ] Add screenshots and a short walkthrough video.
+- [ ] Investigate controlled integrations with authorized telemetry sources.
+- [ ] Add access control and operational safeguards before any real-world integration.
+
+These are proposed improvements, not claims about existing functionality.
+
+## 🤝 Contributing
+
+Contributions, bug reports, documentation improvements, and ideas are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes.
+4. Run the test suite.
+5. Open a pull request describing the changes and tests.
+
+Please avoid submitting secrets, private traffic captures, or sensitive security data.
+
+## 📄 License
+
+This project is distributed under the MIT License. See [LICENSE](LICENSE) for details.
+
+## 👨‍💻 Author
+
+**Raghuraj Pratap Singh**
+
+- GitHub: [@raghuraj72](https://github.com/raghuraj72)
+- Project repository: [Sentinel-X](https://github.com/raghuraj72/Sentinel-X)
+- Live demo: [Sentinel-X on Streamlit](https://sentinel-x-raghuraj.streamlit.app/)
+
+---
+
+*Built as an educational AI and cybersecurity project to explore anomaly detection, explainable risk prioritization, and defensive investigation workflows.*
